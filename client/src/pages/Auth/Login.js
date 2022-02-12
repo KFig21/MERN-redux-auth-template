@@ -9,8 +9,10 @@ import "./Auth.scss";
 export default function Login() {
   const [usermail, setUsermail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorHandler, setErrorHandler] = useState({
+    error: false,
+    message: "",
+  });
   const [isValid, setIsValid] = useState(false);
   const dispatch = useDispatch();
   const state = useSelector((state) => state.user);
@@ -19,16 +21,17 @@ export default function Login() {
     e.preventDefault();
     if (usermail.length > 0 && password.length > 0) {
       dispatch(
-        login({
-          usermail: usermail,
-          password: password,
-        })
+        login(
+          {
+            usermail: usermail,
+            password: password,
+          },
+          setErrorHandler
+        )
       );
       setUsermail("");
       setPassword("");
     }
-    setError(true);
-    setErrorMessage("Username or password is incorrect");
   };
 
   useEffect(() => {
@@ -83,7 +86,9 @@ export default function Login() {
                 Wanna look around?{" "}
                 <button onClick={justVisiting}>Just visiting</button>
               </div> */}
-        {error && <span className="error-span">{errorMessage}</span>}
+        {errorHandler.error && (
+          <span className="error-span">{errorHandler.message}</span>
+        )}
       </div>
     </div>
   );

@@ -1,4 +1,10 @@
-import { LOGIN, LOGOUT, REGISTER, CURRENT_USER } from "../actions/types";
+import {
+  LOGIN,
+  LOGOUT,
+  REGISTER,
+  CURRENT_USER,
+  LOGIN_FAIL,
+} from "../actions/types";
 import jwtDecode from "jwt-decode";
 
 const initialState = {
@@ -25,6 +31,15 @@ const authReducer = (state = initialState, action) => {
         lastname: user.lastname,
         theme: user.theme,
         _id: user._id,
+      };
+    case LOGIN_FAIL:
+      return {
+        username: null,
+        email: null,
+        firstname: null,
+        lastname: null,
+        theme: null,
+        token: null,
       };
     case LOGOUT:
       localStorage.removeItem("token");

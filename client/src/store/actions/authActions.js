@@ -1,4 +1,4 @@
-import { LOGIN, LOGOUT, REGISTER, CURRENT_USER } from "./types";
+import { LOGIN, LOGOUT, REGISTER, CURRENT_USER, LOGIN_FAIL } from "./types";
 import axios from "axios";
 import { url } from "../../helpers/Api";
 
@@ -19,7 +19,7 @@ export const register = (user) => {
   };
 };
 
-export const login = (cred) => {
+export const login = (cred, setErrorHandler) => {
   return (dispatch) => {
     axios
       .post(`${url}/auth/login`, cred)
@@ -31,12 +31,18 @@ export const login = (cred) => {
         });
       })
       .catch((error) => {
-        console.log(error.response);
+        if (error.response) {
+          dispatch({
+            type: LOGIN_FAIL,
+            payload: error.response.data,
+          });
+        }
+        setErrorHandler({ error: true, message: error.response.data });
       });
   };
 };
 
-export const logout = (cred) => {
+export const logout = () => {
   return (dispatch) => {
     dispatch({
       type: LOGOUT,
@@ -44,7 +50,7 @@ export const logout = (cred) => {
   };
 };
 
-export const loadUser = (user) => {
+export const loadUser = () => {
   return (dispatch, getState) => {
     const token = getState().user.token;
     if (token) {
